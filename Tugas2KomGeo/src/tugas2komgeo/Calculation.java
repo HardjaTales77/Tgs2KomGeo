@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package tugas2komgeo;
-import java.lang.Math;
 /**
  *
  * @author Ivan Hardja / 2017730002

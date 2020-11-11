@@ -23,8 +23,7 @@ public class Tugas2KomGeo {
             int n = sc.nextInt();
             Point[]p=new Point[n];
             for(int j=0;j<n;j++){
-                p[j].x=sc.nextInt();
-                p[j].y=sc.nextInt();
+                p[j]= new Point(sc.nextInt(),sc.nextInt());
             }
         }
     }
