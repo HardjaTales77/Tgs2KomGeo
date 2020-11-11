@@ -7,7 +7,7 @@ package tugas2komgeo;
 
 /**
  *
- * @author LENOVO
+ * @author Ivan Hardja / 2017730002
  */
 public class Point {
     double x; //kordinat x

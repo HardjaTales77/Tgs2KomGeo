@@ -7,7 +7,7 @@ package tugas2komgeo;
 import java.util.Scanner;
 /**
  *
- * @author LENOVO
+ * @author Ivan Hardja / 2017730002
  */
 public class Tugas2KomGeo {
 
@@ -17,6 +17,16 @@ public class Tugas2KomGeo {
     public static void main(String[] args) {
         // TODO code application logic here
         Scanner sc = new Scanner(System.in);
+        int kasus = sc.nextInt();//banyak kasus
+        
+        for(int i=0;i<kasus;i++){//utk setiap kasus
+            int n = sc.nextInt();
+            Point[]p=new Point[n];
+            for(int j=0;j<n;j++){
+                p[j].x=sc.nextInt();
+                p[j].y=sc.nextInt();
+            }
+        }
     }
     
 }
