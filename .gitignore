@@ -1,6 +1,2 @@
-/Tugas2KomGeo/build/
-/Tugas2KomGeo/dist/
-/Tugas2KomGeo/nbproject/private/
-/Tugas2KomGeo/nbproject/private/private.xml
-.xml
-.properties
+*.properties
+*.xml
