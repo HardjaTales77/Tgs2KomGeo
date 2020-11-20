@@ -6,7 +6,8 @@
 package tugas2komgeo;
 import java.util.Scanner;
 /**
- *
+ * Kelas tester untuk memanggil seluruh kode yang dibutuhkan
+ * @author Kelvin Adrian Darmawan / 2017730043
  * @author Ivan Hardja / 2017730002
  */
 public class Tugas2KomGeo {

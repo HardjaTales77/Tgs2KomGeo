@@ -5,12 +5,18 @@
  */
 package tugas2komgeo;
 /**
- *
+ * Kelas ini berfungsi untuk melakukan operasi perhitungan
+ * @author Kelvin Adrian Darmawan / 2017730043
  * @author Ivan Hardja / 2017730002
  */
 public class Calculation {
-    public Calculation(){}
     
+    /**
+     * Menghitung jarak antara 2 titik
+     * @param p1 titik awal
+     * @param p2 titik akhir
+     * @return jarak titik p1 ke titik p2
+     */
     public double dist(Point p1,Point p2){ //mencari jarak antara 2 titik
         double xx = Math.pow(p1.x-p2.x,2); //nilai kuadrat kordinat x point 1 dikurang kordinat x point 2
         double yy = Math.pow(p1.y-p2.y,2); //nilai kuadrat kordinat y point 1 dikurang kordinat x point 2
@@ -19,6 +25,14 @@ public class Calculation {
         return res;
     }
   
+    /**
+     * Menentukan posisi titik terhadap segmen garis
+     * @param p titik mulai segmen garis
+     * @param q titik akhir segmen garis
+     * @param r titik yang ingin dikethui posisinya
+     * @return angka positif bila di kanan segmen garis, negatif bila di kiri garis,
+     * dan 0 bila lurus
+     */
     public double pos(Point p, Point q, Point r){ //mencari posisi titik pada garis
         Point pq = new Point(q.x-p.x,q.y-p.y); //vektor pq di isi kordinat q dikurang kordinat p
         Point qr = new Point(r.x-q.x,r.y-q.y); //vektor pq di isi kordinat q dikurang kordinat p
@@ -28,29 +42,58 @@ public class Calculation {
         return res; //positif=kanan, negatif=kiri, 0=lurus
     }
   
+    /**
+     * Menghitung cross product pada titik p dan titik q
+     * @param p titik p
+     * @param q titik q
+     * @return cross product
+     */
     public double cross(Point p,Point q){ //menghitung cross product
         double res = p.x*q.y-p.y*q.x; //hitung cross product
         return  res;//cross product
     }
   
+    /**
+     * Menghitung dot product pada titik p dengan titik q
+     * @param p titik p
+     * @param q titik q
+     * @return dot product
+     */
     public double dot(Point p,Point q){ //menghitung dot product
         double res = p.x*q.x+p.y*q.y; //hitung dot product
         return res;//dot product
     }
     
+    /**
+     * Mengecek apakah kedua garis ini berpotongan atau tidak
+     * @param p titik awal garis 1
+     * @param q titik akhir garis 1
+     * @param r titik awal garis 2
+     * @param s titik akhir garis 2
+     * @return bernilai benar bila kedua garis saling berpotongan, bernilai
+     * false bila kedua garis tidak saling berpotongan
+     */
     public boolean intersect(Point p,Point q,Point r,Point s){//mengecek apabila kedua buah garis berpotongan atau tidak
-        double posP = this.pos(r,p,q);//mencari posisi titik r pada garis p dan q
-        double posQ = this.pos(s,p,q);//mencari posisi titik s pada garis p dan q
-    
-        if(posP>0&&posQ<0){//cek apakah titik r berada di kanan garis serta titik s di kiri garis
-            return true;//jika iya maka berpotongan
-        }else if(posP<0&&posQ>0){//cek apakah titik s berada di kanan garis serta titik r di kiri garis
-            return true;//jika iya maka berpotongan
-        }else{
-            return false;//jika tidak maka tidak berpotongan
-        }
+        double posisi_p = pos(r, p, q); // mencari posisi titik r pada pq
+        double posisi_q = pos(s, p, q); // mencari posisi titik s pada pq
+        return (posisi_p >= 0 && posisi_q <= 0) || (posisi_p <= 0 && posisi_q >= 0); // melihat apakah kedua garis berpotongan atau tidak
+        //mengembalikan nilai true saat diketahui bahwa kedua garis saling berpotongan
+        //kalau tidak berpotongan
+        //mengembalikan nilai false
     } 
     
+    /**
+     * Mencari posisi titik pada polygon (di luar atau di dalam polygon).
+     * Dilakukan dengan cara menggambar garis horizontal dari titik yang ingin
+     * dicek lurus ke kanan dan menghitung perpotongannya. Bila perpotongannya
+     * ganjil, maka berada di dalam polygon. Bila genap, maka titik berada di
+     * luar polygon.
+     *
+     * @param p urutan titik pembentuk polygon
+     * @param t titik yang ingin dicek posisinya
+     * @return bernilai false jika titik berada di luar polygon. Bernilai true
+     * jika titik berada di dalam polygon.
+     */
     public boolean isIn(Point[]p,Point t){//Mengecek apakah titik berada dalam polygon atau tidak
         boolean cek;//untuk mengecek apabila garis berpotongan atau tidak
         int counter=0;//untuk mengecek berapa kali berpotongan

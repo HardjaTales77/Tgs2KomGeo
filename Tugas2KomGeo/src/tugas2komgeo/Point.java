@@ -6,7 +6,8 @@
 package tugas2komgeo;
 
 /**
- *
+ * Kelas ini merepresentasikan sebuah titik
+ * @author Kelvin Adrian Darmawan / 2017730043
  * @author Ivan Hardja / 2017730002
  */
 public class Point {
