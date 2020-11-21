@@ -5,6 +5,7 @@
  */
 package tugas2komgeo;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -129,49 +130,103 @@ public class Calculation {
      * @param p merupakan array dari kelas Point(titik)
      * @return  
      */
-    public Point aklToussant(Point [] p){
-        Point [] output;
+    public Point[] aklToussant(Point [] p){
         LinkedList<Point> temp = new LinkedList<>();
+        // 0=xmax 1=xmin 2=ymax 3=ymin
         Point [] shell = new Point[4];
         double xMax=Double.MIN_VALUE;
         double yMax=Double.MIN_VALUE;
         double yMin=Double.MAX_VALUE;
         double xMin=Double.MAX_VALUE;
         
-        int iXMax =-1;
-        int iYMax=-1;
-        int iYMin=-1;
-        int iXMin=-1;
+//        int iXMax =-1;
+//        int iYMax=-1;
+//        int iYMin=-1;
+//        int iXMin=-1;
         
         for (int i = 0; i < p.length; i++) {
             if(p[i].x>xMax){
                 xMax=p[i].x;
-                iXMax=i;
+//                iXMax=i;
+                shell[0]=p[i];
             }
             if(p[i].x<xMin){
                 xMin=p[i].x;
-                iXMin=i;
+//                iXMin=i;
+                shell[1]=p[i];
             }
             if(p[i].y>yMax){
                 yMax=p[i].y;
-                iYMax=i;
+//                iYMax=i;
+                shell[2]=p[i];
             }
             if(p[i].y<yMin){
                 yMin=p[i].y;
-                iYMin=i;
+//                iYMin=i;
+                shell[3]=p[i];
             }
         }
         
         
         
         for (int i = 0; i < p.length; i++) {
-            if(i==iXMax||i==iXMin||i==iYMax||i==iYMin){
+            if(p[i].equals(shell[0])||p[i].equals(shell[1])||p[i].equals(shell[2])||p[i].equals(shell[3])){
                 temp.add(p[i]);
             }else{
-                
+                if(!this.isIn(shell, p[i])){
+                    temp.add(p[i]);
+                }
             }
         }
-        
-        return new Point(0,0);
+        Point[] output = new Point[temp.size()];
+        for (int i = 0; i < output.length; i++) {
+            output[i] = temp.pop();
+        }
+        return output;
+    }
+    
+    /**
+     * Posisi sebuah titik terhadap sebuah segmen garis (kiri, kanan, atau
+     * colinear)
+     *
+     * @param p titik yang ingin dicek
+     * @param q titik mulai pembentuk segmen garis
+     * @param r titik akhir pembentuk segmen garis
+     * @return jika nilainya <0 di kiri
+     * >0 di kanan 0 kolinear atau segaris
+     */
+    public double ccw(Point p, Point q, Point r) {
+        Point pq = new Point(q.x - p.x, q.y - p.y); //pq berisikan koordinat q-koordinat p
+        Point qr = new Point(r.x - q.x, r.y - q.y); //qr berisikan koordinat r-koordinat q
+        return cross(pq, qr); //pq X qr
+    }
+    
+    public void incrementaSweeping(Point[] p){
+        Arrays.sort(p);
+        LinkedList<Point> l = new LinkedList<>();// untuk menampung convex hull saat ini
+        l.add(p[0]);
+        l.add(p[1]);
+        l.add(p[2]);
+        for (int i = 3; i < p.length; i++) {
+            Point pl = p[i-2];
+            Point pr = p[i-1];
+            
+        }
+    }
+    
+    /**
+     * Menghitung luas polygon, baik convex maupun concave
+     *
+     * @param polygon urutan titik pembentuk polygon
+     * @return luas polygon
+     */
+    public double luasPolygon(Point[] polygon) {
+        double res = 0.0;
+        int j = polygon.length - 1;
+        for (int i = 0; i < polygon.length; i++) {
+            res += (polygon[j].x + polygon[i].x) * (polygon[j].y - polygon[i].y);
+            j = i;
+        }
+        return Math.abs(res / 2.0);
     }
 }

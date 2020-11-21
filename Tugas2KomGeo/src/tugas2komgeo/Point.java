@@ -10,12 +10,21 @@ package tugas2komgeo;
  * @author Kelvin Adrian Darmawan / 2017730043
  * @author Ivan Hardja / 2017730002
  */
-public class Point {
+public class Point implements Comparable<Point>{
     double x; //kordinat x
     double y; //kordinat y
   
     public Point(double x, double y){
         this.x=x; //isi x
         this.y=y; //isi y
+    }
+    
+    public boolean biggerX(Point p){
+        return this.x>p.x;
+    }
+
+    @Override
+    public int compareTo(Point o) {
+        return (int)(this.x-o.x);
     }
 }
