@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package tugas2komgeo;
+
+import java.util.LinkedList;
+
 /**
  * Kelas ini berfungsi untuk melakukan operasi perhitungan
  * @author Kelvin Adrian Darmawan / 2017730043
@@ -24,7 +27,7 @@ public class Calculation {
         double res = Math.sqrt(xx+yy); //mencari akar nilai pertambahan xx dan yy
         return res;
     }
-  
+    
     /**
      * Menentukan posisi titik terhadap segmen garis
      * @param p titik mulai segmen garis
@@ -119,5 +122,56 @@ public class Calculation {
         }else{//apabila ganjil
             return true;//kembalikan true karena berada di dalam polygon
         }
+    }
+    
+    /**
+     * asumsi nilai kordinat xMin, yMin, xMax, dan yMax dimiliki oleh titik yang berbeda
+     * @param p merupakan array dari kelas Point(titik)
+     * @return  
+     */
+    public Point aklToussant(Point [] p){
+        Point [] output;
+        LinkedList<Point> temp = new LinkedList<>();
+        Point [] shell = new Point[4];
+        double xMax=Double.MIN_VALUE;
+        double yMax=Double.MIN_VALUE;
+        double yMin=Double.MAX_VALUE;
+        double xMin=Double.MAX_VALUE;
+        
+        int iXMax =-1;
+        int iYMax=-1;
+        int iYMin=-1;
+        int iXMin=-1;
+        
+        for (int i = 0; i < p.length; i++) {
+            if(p[i].x>xMax){
+                xMax=p[i].x;
+                iXMax=i;
+            }
+            if(p[i].x<xMin){
+                xMin=p[i].x;
+                iXMin=i;
+            }
+            if(p[i].y>yMax){
+                yMax=p[i].y;
+                iYMax=i;
+            }
+            if(p[i].y<yMin){
+                yMin=p[i].y;
+                iYMin=i;
+            }
+        }
+        
+        
+        
+        for (int i = 0; i < p.length; i++) {
+            if(i==iXMax||i==iXMin||i==iYMax||i==iYMin){
+                temp.add(p[i]);
+            }else{
+                
+            }
+        }
+        
+        return new Point(0,0);
     }
 }
