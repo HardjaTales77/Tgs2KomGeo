@@ -214,19 +214,12 @@ public class Calculation {
         }
     }
     
-    /**
-     * Menghitung luas polygon, baik convex maupun concave
-     *
-     * @param polygon urutan titik pembentuk polygon
-     * @return luas polygon
-     */
-    public double luasPolygon(Point[] polygon) {
+    
+    public double luasSegitiga(Point p, Point q, Point r) {
         double res = 0.0;
-        int j = polygon.length - 1;
-        for (int i = 0; i < polygon.length; i++) {
-            res += (polygon[j].x + polygon[i].x) * (polygon[j].y - polygon[i].y);
-            j = i;
-        }
+        res+=(p.x+q.x)*(p.y+q.y);
+        res+=(q.x+r.x)*(q.y+r.y);
+        res+=(r.x+p.x)*(r.y+p.x);
         return Math.abs(res / 2.0);
     }
 }
