@@ -222,4 +222,16 @@ public class Calculation {
         res+=(r.x+p.x)*(r.y+p.x);
         return Math.abs(res / 2.0);
     }
+    
+    public void rotatingCaliper(Point[] p){
+        int idxp = p.length-2;
+        int idxnextp = 0;
+        int idxq = 0;
+        int idxnextq = 1;
+        while(luasSegitiga(p[idxp],p[idxnextp],p[idxnextq])>luasSegitiga(p[idxp],p[idxnextp],p[idxp])){
+            idxq = idxnextq;
+            idxnextq++;
+        }
+        
+    }
 }
