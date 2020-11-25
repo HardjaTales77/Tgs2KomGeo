@@ -234,4 +234,119 @@ public class Calculation {
         }
         
     }
+    
+    /**
+     * Metode bruteforce untuk mencari jarak terpendek pada index yang sudah ditentukan
+     * @param p kumpulan titik
+     * @param start index awal
+     * @param end index akhir
+     * @return garis yang terbentuk dari dua pasangan titik terdekat
+     */
+    public Line shortBF(Point[] p, int start, int end){
+        Point[] res = new Point[2];
+        double min_val = Double.MAX_VALUE;
+        for (int i = start; i < end; i++) {
+            for (int j = i+1; j < end; j++) {
+                double temp = this.dist(p[i], p[j]);
+                if (temp<min_val) {
+                    min_val = temp;
+                    res[0] = p[i];
+                    res[1] = p[j];
+                }
+            }
+        }
+        Line hasil = new Line(res[0],res[1],min_val);
+        return hasil;
+    }
+    
+    /**
+     * Mencari jarak terkecil dari hasil perhitungan jarak sebelumnya
+     * @param s kumpulan titik yang berada di dalam jangkauan jarak sebelumnya dari garis pembagi
+     * @param d jarak terpendek yang sudah dihitung
+     * @return garis yang terbentuk dari dua pasangan titik terdekat
+     */
+    public Line stripClosest(Point[] s, double d){
+        Point[] res = new Point[2];
+        double min_val = d;
+        for (int i = 0; i < s.length; i++) {
+            int j = i+1;
+            while(j<s.length && (s[j].y-s[i].y)<min_val){
+                min_val = this.dist(s[i], s[j]);
+                res[0] = s[i];
+                res[1] = s[j];
+                j++;
+            }
+        }
+        Line hasil = new Line(res[0],res[1],min_val);
+        return hasil;
+    }
+    
+    /**
+     * Membandingkan dua segmen garis mana jarak yang lebih pendek
+     * @param l1 garis yang terbentuk dari dua titik
+     * @param l2 garis yang terbentuk dari dua titik
+     * @return garis terpendek
+     */
+    public Line smaller(Line l1, Line l2){
+        if(l1.distance<l2.distance){
+            return l1;
+        }
+        else{
+            return l2;
+        }
+    }
+    
+    /**
+     * Metode rekursif devide and conquer untuk mencari titik dengan jarak terdekat
+     * @param p kumpulan titik
+     * @param q kumpulan titik
+     * @param start index dimulai
+     * @param n index akhir
+     * @return garis yang terbentuk dari dua pasangan titik terdekat
+     */
+    public Line closestR(Point[] p, Point[] q, int start, int n){
+        if (n<=3) {
+            return shortBF(p, start, n);
+        }
+        int mid = n/2;
+        Point midPoint = p[mid];
+        
+        Line left = closestR(p, q, start, mid);
+        Line right = closestR(p, q, mid, n);
+        
+        Line temp = this.smaller(left,right);
+        
+        int count = 0;
+        for (int i = 0; i < q.length; i++) {
+            if(Math.abs(q[i].x - midPoint.x)<temp.distance){
+                count++;
+            }
+        }
+        if(count==0){
+            return temp;
+        }
+        else{
+            Point[] strip = new Point[count];
+            int j = 0;
+            for (int i = 0; i < q.length; i++) {
+                if(Math.abs(q[i].x - midPoint.x)<temp.distance){
+                    strip[j] = q[i];
+                    j++;
+                }
+            }
+            Line temp2 = this.smaller(temp, this.stripClosest(q, j));
+            return temp2;
+        }
+    }
+    
+    /**
+     * Memanggil metode rekursif untuk mencari pasangan titik terdekat
+     * @param p kumpulan titik
+     * @return garis yang terbentuk dari dua pasangan titik terdekat
+     */
+    public Line closestPair(Point[] p){
+        Arrays.sort(p);
+        Point[] q = p;
+        return this.closestR(p, q, 0, p.length);
+    }
 }
