@@ -15,8 +15,8 @@ import java.util.LinkedList;
  */
 public class Calculation {
     
-    private Point sOne;
-    private Point sTwo;
+    private Point sOne;//titik global untuk menyimpan pada class Line salah satu titik terdekat atau terjauh
+    private Point sTwo;//titik global untuk menyimpan pada class Line salah satu titik terdekat atau terjauh
     
     /**
      * Menghitung jarak antara 2 titik
