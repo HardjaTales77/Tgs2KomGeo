@@ -26,6 +26,25 @@ public class Tugas2KomGeo {
             for(int j=0;j<n;j++){
                 p[j]= new Point(sc.nextInt(),sc.nextInt());
             }
+            Calculation calc = new Calculation();
+            Line shortest = calc.closestPair(p);
+            int i1=-1;
+            int i2=-1;
+            int count=0;
+            while(count<p.length){
+                if(p[count].x==shortest.p.x){
+                    i1=count;
+                }
+                if(p[count].y==shortest.q.y){
+                    i2=count;
+                }
+                if(i1!=-1&&i2!=-1){
+                    break;
+                }
+                count++;
+            }
+            System.out.println(shortest.p.x+" "+shortest.p.y+" "+shortest.q.x+" "+shortest.q.y);
+            System.out.println(i1+" "+i2);
         }
     }
     

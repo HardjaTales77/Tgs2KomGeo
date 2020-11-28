@@ -22,7 +22,7 @@ public class Point implements Comparable<Point>{
     public boolean biggerX(Point p){
         return this.x>p.x;
     }
-
+    
     @Override
     public int compareTo(Point o) {
         return (int)(this.x-o.x);

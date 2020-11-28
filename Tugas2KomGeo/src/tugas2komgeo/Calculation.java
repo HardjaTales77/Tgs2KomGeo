@@ -15,6 +15,9 @@ import java.util.LinkedList;
  */
 public class Calculation {
     
+    private Point sOne;
+    private Point sTwo;
+    
     /**
      * Menghitung jarak antara 2 titik
      * @param p1 titik awal
@@ -167,8 +170,6 @@ public class Calculation {
             }
         }
         
-        
-        
         for (int i = 0; i < p.length; i++) {
             if(p[i].equals(shell[0])||p[i].equals(shell[1])||p[i].equals(shell[2])||p[i].equals(shell[3])){
                 temp.add(p[i]);
@@ -214,7 +215,6 @@ public class Calculation {
         }
     }
     
-    
     public double luasSegitiga(Point p, Point q, Point r) {
         double res = 0.0;
         res+=(p.x+q.x)*(p.y+q.y);
@@ -250,12 +250,12 @@ public class Calculation {
                 double temp = this.dist(p[i], p[j]);
                 if (temp<min_val) {
                     min_val = temp;
-                    res[0] = p[i];
-                    res[1] = p[j];
+                    this.sOne = p[i];
+                    this.sTwo = p[j];
                 }
             }
         }
-        Line hasil = new Line(res[0],res[1],min_val);
+        Line hasil = new Line(this.sOne,this.sTwo,min_val);
         return hasil;
     }
     
@@ -269,15 +269,16 @@ public class Calculation {
         Point[] res = new Point[2];
         double min_val = d;
         for (int i = 0; i < s.length; i++) {
-            int j = i+1;
-            while(j<s.length && (s[j].y-s[i].y)<min_val){
-                min_val = this.dist(s[i], s[j]);
-                res[0] = s[i];
-                res[1] = s[j];
-                j++;
+            for(int j=i+1;j<s.length;j++){
+                double temp = this.dist(s[i], s[j]);
+                if (temp<min_val) {
+                    min_val = temp;
+                    this.sOne = s[i];
+                    this.sTwo = s[j];
+                }
             }
         }
-        Line hasil = new Line(res[0],res[1],min_val);
+        Line hasil = new Line(this.sOne,this.sTwo,min_val);
         return hasil;
     }
     
@@ -308,17 +309,17 @@ public class Calculation {
         if (n<=3) {
             return shortBF(p, start, n);
         }
-        int mid = n/2;
+        int mid = n/2-1;
         Point midPoint = p[mid];
         
         Line left = closestR(p, q, start, mid);
-        Line right = closestR(p, q, mid, n);
+        Line right = closestR(p, q, mid, n-1);
         
         Line temp = this.smaller(left,right);
         
         int count = 0;
         for (int i = 0; i < q.length; i++) {
-            if(Math.abs(q[i].x - midPoint.x)<temp.distance){
+            if(Math.abs(q[i].x) - Math.abs(midPoint.x)<temp.distance){
                 count++;
             }
         }
@@ -329,12 +330,12 @@ public class Calculation {
             Point[] strip = new Point[count];
             int j = 0;
             for (int i = 0; i < q.length; i++) {
-                if(Math.abs(q[i].x - midPoint.x)<temp.distance){
+                if(Math.abs(q[i].x) - Math.abs(midPoint.x)<temp.distance){
                     strip[j] = q[i];
                     j++;
                 }
             }
-            Line temp2 = this.smaller(temp, this.stripClosest(q, j));
+            Line temp2 = this.smaller(temp, this.stripClosest(strip, temp.distance));
             return temp2;
         }
     }
