@@ -226,7 +226,6 @@ public class Calculation {
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
     private Line shortBF(Point[] p, int start, int end){
-        Point[] res = new Point[2];
         double min_val = Double.MAX_VALUE;
         for (int i = start; i < end; i++) {
             for (int j = i+1; j < end; j++) {
@@ -249,7 +248,6 @@ public class Calculation {
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
     private Line stripClosest(Point[] s, double d){
-        Point[] res = new Point[2];
         double min_val = d;
         for (int i = 0; i < s.length; i++) {
             for(int j=i+1;j<s.length;j++){
