@@ -33,29 +33,12 @@ public class Calculation {
     }
     
     /**
-     * Menentukan posisi titik terhadap segmen garis
-     * @param p titik mulai segmen garis
-     * @param q titik akhir segmen garis
-     * @param r titik yang ingin dikethui posisinya
-     * @return angka positif bila di kanan segmen garis, negatif bila di kiri garis,
-     * dan 0 bila lurus
-     */
-    public double pos(Point p, Point q, Point r){ //mencari posisi titik pada garis
-        Point pq = new Point(q.x-p.x,q.y-p.y); //vektor pq di isi kordinat q dikurang kordinat p
-        Point qr = new Point(r.x-q.x,r.y-q.y); //vektor pq di isi kordinat q dikurang kordinat p
-   	
-        double res = cross(pq,qr); //cross product pq dan qr
-    
-        return res; //positif=kanan, negatif=kiri, 0=lurus
-    }
-  
-    /**
      * Menghitung cross product pada titik p dan titik q
      * @param p titik p
      * @param q titik q
      * @return cross product
      */
-    public double cross(Point p,Point q){ //menghitung cross product
+    private double cross(Point p,Point q){ //menghitung cross product
         double res = p.x*q.y-p.y*q.x; //hitung cross product
         return  res;//cross product
     }
@@ -66,7 +49,7 @@ public class Calculation {
      * @param q titik q
      * @return dot product
      */
-    public double dot(Point p,Point q){ //menghitung dot product
+    private double dot(Point p,Point q){ //menghitung dot product
         double res = p.x*q.x+p.y*q.y; //hitung dot product
         return res;//dot product
     }
@@ -80,9 +63,9 @@ public class Calculation {
      * @return bernilai benar bila kedua garis saling berpotongan, bernilai
      * false bila kedua garis tidak saling berpotongan
      */
-    public boolean intersect(Point p,Point q,Point r,Point s){//mengecek apabila kedua buah garis berpotongan atau tidak
-        double posisi_p = pos(r, p, q); // mencari posisi titik r pada pq
-        double posisi_q = pos(s, p, q); // mencari posisi titik s pada pq
+    private boolean intersect(Point p,Point q,Point r,Point s){//mengecek apabila kedua buah garis berpotongan atau tidak
+        double posisi_p = ccw(r, p, q); // mencari posisi titik r pada pq
+        double posisi_q = ccw(s, p, q); // mencari posisi titik s pada pq
         return (posisi_p >= 0 && posisi_q <= 0) || (posisi_p <= 0 && posisi_q >= 0); // melihat apakah kedua garis berpotongan atau tidak
         //mengembalikan nilai true saat diketahui bahwa kedua garis saling berpotongan
         //kalau tidak berpotongan
@@ -101,7 +84,7 @@ public class Calculation {
      * @return bernilai false jika titik berada di luar polygon. Bernilai true
      * jika titik berada di dalam polygon.
      */
-    public boolean isIn(Point[]p,Point t){//Mengecek apakah titik berada dalam polygon atau tidak
+    private boolean isIn(Point[]p,Point t){//Mengecek apakah titik berada dalam polygon atau tidak
         boolean cek;//untuk mengecek apabila garis berpotongan atau tidak
         int counter=0;//untuk mengecek berapa kali berpotongan
         int n=p.length;//banyak titik yang ada
@@ -133,7 +116,7 @@ public class Calculation {
      * @param p merupakan array dari kelas Point(titik)
      * @return  
      */
-    public Point[] aklToussant(Point [] p){
+    private Point[] aklToussant(Point [] p){
         LinkedList<Point> temp = new LinkedList<>();
         // 0=xmax 1=xmin 2=ymax 3=ymin
         Point [] shell = new Point[4];
@@ -196,13 +179,13 @@ public class Calculation {
      * @return jika nilainya <0 di kiri
      * >0 di kanan 0 kolinear atau segaris
      */
-    public double ccw(Point p, Point q, Point r) {
+    private double ccw(Point p, Point q, Point r) {
         Point pq = new Point(q.x - p.x, q.y - p.y); //pq berisikan koordinat q-koordinat p
         Point qr = new Point(r.x - q.x, r.y - q.y); //qr berisikan koordinat r-koordinat q
         return cross(pq, qr); //pq X qr
     }
     
-    public void incrementaSweeping(Point[] p){
+    private void incrementaSweeping(Point[] p){
         Arrays.sort(p);
         LinkedList<Point> l = new LinkedList<>();// untuk menampung convex hull saat ini
         l.add(p[0]);
@@ -215,7 +198,7 @@ public class Calculation {
         }
     }
     
-    public double luasSegitiga(Point p, Point q, Point r) {
+    private double luasSegitiga(Point p, Point q, Point r) {
         double res = 0.0;
         res+=(p.x+q.x)*(p.y+q.y);
         res+=(q.x+r.x)*(q.y+r.y);
@@ -242,7 +225,7 @@ public class Calculation {
      * @param end index akhir
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
-    public Line shortBF(Point[] p, int start, int end){
+    private Line shortBF(Point[] p, int start, int end){
         Point[] res = new Point[2];
         double min_val = Double.MAX_VALUE;
         for (int i = start; i < end; i++) {
@@ -265,7 +248,7 @@ public class Calculation {
      * @param d jarak terpendek yang sudah dihitung
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
-    public Line stripClosest(Point[] s, double d){
+    private Line stripClosest(Point[] s, double d){
         Point[] res = new Point[2];
         double min_val = d;
         for (int i = 0; i < s.length; i++) {
@@ -288,7 +271,7 @@ public class Calculation {
      * @param l2 garis yang terbentuk dari dua titik
      * @return garis terpendek
      */
-    public Line smaller(Line l1, Line l2){
+    private Line smaller(Line l1, Line l2){
         if(l1.distance<l2.distance){
             return l1;
         }
@@ -305,7 +288,7 @@ public class Calculation {
      * @param n index akhir
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
-    public Line closestR(Point[] p, Point[] q, int start, int n){
+    private Line closestR(Point[] p, Point[] q, int start, int n){
         if (n<=3) {
             return shortBF(p, start, n);
         }
@@ -345,9 +328,26 @@ public class Calculation {
      * @param p kumpulan titik
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
-    public Line closestPair(Point[] p){
+    private Line closestPair(Point[] p){
         Arrays.sort(p);
         Point[] q = p;
         return this.closestR(p, q, 0, p.length);
+    }
+    
+    public String idxClosestPair(Point[] p){
+        Point[] temp = p.clone();
+        Line cp = this.closestPair(p);
+        Point a=cp.p;
+        Point b=cp.q;
+        String aS="";
+        String bS="";
+        for (int q = 0; q < p.length; q++) {
+            if(temp[q].equivalent(a)){
+                aS+=q+1;
+            }else if(temp[q].equivalent(b)){
+                bS+=q+1;
+            }
+        }
+        return aS+" "+bS;
     }
 }
