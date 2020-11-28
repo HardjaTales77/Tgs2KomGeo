@@ -15,8 +15,7 @@ import java.util.LinkedList;
  */
 public class Calculation {
     
-    private Point sOne;//titik global untuk menyimpan pada class Line salah satu titik terdekat atau terjauh
-    private Point sTwo;//titik global untuk menyimpan pada class Line salah satu titik terdekat atau terjauh
+    private Point sOne, sTwo;//titik global untuk menyimpan pada class Line salah satu titik terdekat atau terjauh
     
     /**
      * Menghitung jarak antara 2 titik
@@ -191,11 +190,49 @@ public class Calculation {
         l.add(p[0]);
         l.add(p[1]);
         l.add(p[2]);
+        Point pl = p[1];
+        Point pr = p[2];
         for (int i = 3; i < p.length; i++) {
-            Point pl = p[i-2];
-            Point pr = p[i-1];
-            
+            if(i==3){
+                boolean li = (this.ccw(p[0], pl, p[i])<0);//false
+                boolean ri = (this.ccw(p[0], pr, p[i])<0);//true
+                if(li){
+                    System.out.println("li");
+                    Point temp1 = l.getLast();
+                    l.removeLast();
+                    Point temp2 = l.getLast();
+                    l.removeLast();
+                    l.add(temp2);
+                    l.add(p[i]);
+                    l.add(temp1);
+                }
+                else if(ri){
+                    System.out.println("ri");
+                    l.add(2, p[i]);
+                }
+                
+                break;
+            }
+//            else{
+//                for (int j = 0; j < l.size(); j++) {
+//                    System.out.println(l.pop().print());
+//                }
+////                Point[] px = new Point[l.size()];
+////                for (int j = 0; j < l.size(); j++) {
+////                    px[j] = l.pop();
+////                }
+////                for (int j = 0; j < px.length; j++) {
+////                    System.out.println("length: "+px.length);
+////                    System.out.println("j: "+j);
+////                    System.out.println(px[j].print());
+////                }
+//                break;
+//            }
         }
+    }
+    
+    public void longest(Point[] p){
+        this.incrementaSweeping(this.aklToussant(p));
     }
     
     private double luasSegitiga(Point p, Point q, Point r) {

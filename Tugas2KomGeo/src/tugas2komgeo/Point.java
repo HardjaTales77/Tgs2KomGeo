@@ -31,4 +31,8 @@ public class Point implements Comparable<Point>{
     public int compareTo(Point o) {
         return (int)(this.x-o.x);
     }
+    
+    public String print(){
+        return "["+x+","+y+"] ";
+    }
 }

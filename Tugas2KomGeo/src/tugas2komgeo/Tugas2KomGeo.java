@@ -27,7 +27,8 @@ public class Tugas2KomGeo {
                 p[j]= new Point(sc.nextInt(),sc.nextInt());
             }
             Calculation calc = new Calculation();
-            System.out.println(calc.idxClosestPair(p));
+//            System.out.println(calc.idxClosestPair(p));
+            calc.longest(p);
         }
     }
     
