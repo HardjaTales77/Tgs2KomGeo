@@ -19,12 +19,12 @@ public class Point implements Comparable<Point>{
         this.y=y; //isi y
     }
     
-    public boolean biggerX(Point p){
-        return this.x>p.x;
+    public boolean biggerX(Point p){//mengecek apakah nilai kordinat x lebih besar dari titik masukan
+        return this.x>p.x;//kembalikan true apabila nilai kordinat x lebih besar
     }
     
-    public boolean equivalent(Point p){
-        return (this.x==p.x && this.y==p.y);
+    public boolean equivalent(Point p){//mengecek apakah sama dengan titik masukan
+        return (this.x==p.x && this.y==p.y);//kembalikan true apabila nilai kordinat x dan y sama dengan masukan
     }
     
     @Override

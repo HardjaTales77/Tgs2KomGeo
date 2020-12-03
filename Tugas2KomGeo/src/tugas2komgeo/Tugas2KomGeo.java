@@ -21,14 +21,15 @@ public class Tugas2KomGeo {
         int kasus = sc.nextInt();//banyak kasus
         
         for(int i=0;i<kasus;i++){//utk setiap kasus
-            int n = sc.nextInt();
-            Point[]p=new Point[n];
-            for(int j=0;j<n;j++){
-                p[j]= new Point(sc.nextInt(),sc.nextInt());
+            int n = sc.nextInt();//banyak titik
+            Point[]p=new Point[n];//array yang menyimpan titik
+            for(int j=0;j<n;j++){//untuk sebanyak n dilakukan
+                p[j]= new Point(sc.nextInt(),sc.nextInt());//buat titik baru untuk array
             }
             Calculation calc = new Calculation();
-//            System.out.println(calc.idxClosestPair(p));
+//           System.out.println(calc.idxClosestPair(p));
             calc.longest(p);
+            System.out.println(calc.idxClosestPair(p));//mengeluarkan index kedua titik dengan jarak terdekat
         }
     }
     

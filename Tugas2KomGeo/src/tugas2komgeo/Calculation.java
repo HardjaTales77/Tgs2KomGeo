@@ -235,11 +235,19 @@ public class Calculation {
         this.incrementaSweeping(this.aklToussant(p));
     }
     
+    /**
+     * Metode ini menghitung luas dari segitiga yang terbentuk dari 3 buah titik
+     *
+     * @param p titik 1
+     * @param q titik 2
+     * @param r titik 3
+     * @return hasil luas segitiga
+     */
     private double luasSegitiga(Point p, Point q, Point r) {
-        double res = 0.0;
-        res+=(p.x+q.x)*(p.y+q.y);
-        res+=(q.x+r.x)*(q.y+r.y);
-        res+=(r.x+p.x)*(r.y+p.x);
+        double res = 0.0;//variabel tempat hasil perhitungan disimpan
+        res+=(p.x+q.x)*(p.y+q.y);//res ditambah dengan pertambahan kordinat x dari titik p dan q dikalikan dengan pertambahan kordinat y nya
+        res+=(q.x+r.x)*(q.y+r.y);//res ditambah dengan pertambahan kordinat x dari titik q dan r dikalikan dengan pertambahan kordinat y nya
+        res+=(r.x+p.x)*(r.y+p.x);//res ditambah dengan pertambahan kordinat x dari titik p dan r dikalikan dengan pertambahan kordinat y nya
         return Math.abs(res / 2.0);
     }
     
@@ -263,19 +271,19 @@ public class Calculation {
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
     private Line shortBF(Point[] p, int start, int end){
-        double min_val = Double.MAX_VALUE;
-        for (int i = start; i < end; i++) {
-            for (int j = i+1; j < end; j++) {
-                double temp = this.dist(p[i], p[j]);
-                if (temp<min_val) {
-                    min_val = temp;
-                    this.sOne = p[i];
-                    this.sTwo = p[j];
+        double min_val = Double.MAX_VALUE;//menyimpan jarak paling kecil
+        for (int i = start; i < end; i++) {//untuk setiap titik dari index start ke index end suatu array
+            for (int j = i+1; j < end; j++) {//untuk setiap titik dari sesudah i ke index end suatu array
+                double temp = this.dist(p[i], p[j]);//variabel yang menyimpan hasil perhitungan jarak 2 buah titik
+                if (temp<min_val) {//cek apakah nilai temp lebih kecil dari min_val
+                    min_val = temp;//jika lebih kecil maka nilai min_val adalah temp
+                    this.sOne = p[i];//nilai variabel global sOne adalah titik ke i yang membuat garis
+                    this.sTwo = p[j];//nilai variabel global sTwo adalah titik ke j yang membuat garis
                 }
             }
         }
-        Line hasil = new Line(this.sOne,this.sTwo,min_val);
-        return hasil;
+        Line hasil = new Line(this.sOne,this.sTwo,min_val);//buat sebuah garis yang terbentuk dari kedua titik dengan jarak terdekat
+        return hasil;//kembalikan hasil
     }
     
     /**
@@ -285,19 +293,19 @@ public class Calculation {
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
     private Line stripClosest(Point[] s, double d){
-        double min_val = d;
-        for (int i = 0; i < s.length; i++) {
-            for(int j=i+1;j<s.length;j++){
-                double temp = this.dist(s[i], s[j]);
-                if (temp<min_val) {
-                    min_val = temp;
-                    this.sOne = s[i];
-                    this.sTwo = s[j];
+        double min_val = d;//menyimpan jarak terkecil yang sudah terhitung
+        for (int i = 0; i < s.length; i++) {//untuk setiap titik pada array
+            for(int j=i+1;j<s.length;j++){//untuk setiap titik pada array sesudah i
+                double temp = this.dist(s[i], s[j]);//variabel menyimpan jarak yang dihitung
+                if (temp<min_val) {//cek apakah nilai temp lebih kecil dari min_val
+                    min_val = temp;//jika lebih kecil maka nilai min_val adalah temp
+                    this.sOne = s[i];//variabel global sOne menyimpan titik ke i
+                    this.sTwo = s[j];//variabel global sTwo menyimpan titik ke j
                 }
             }
         }
-        Line hasil = new Line(this.sOne,this.sTwo,min_val);
-        return hasil;
+        Line hasil = new Line(this.sOne,this.sTwo,min_val);//buat sebuah garis yang terbentuk dari kedua titik dengan jarak terdekat
+        return hasil;//kembalikan hasil
     }
     
     /**
@@ -307,11 +315,11 @@ public class Calculation {
      * @return garis terpendek
      */
     private Line smaller(Line l1, Line l2){
-        if(l1.distance<l2.distance){
-            return l1;
+        if(l1.distance<l2.distance){//cek apakah jarak garis l1 lebih kecil dari l2
+            return l1;//jika iya kembalikan garis l1
         }
-        else{
-            return l2;
+        else{//jika tidak
+            return l2;//kembalikan garis l2
         }
     }
     
@@ -321,40 +329,41 @@ public class Calculation {
      * @param q kumpulan titik
      * @param start index dimulai
      * @param n index akhir
+     * param p dan q merupakan array titik yang sama
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
     private Line closestR(Point[] p, Point[] q, int start, int n){
-        if (n<=3) {
-            return shortBF(p, start, n);
+        if (n<=3) {//jika banyak titik lebih kecil dari 3
+            return shortBF(p, start, n);//panggil metode shortBF
         }
-        int mid = n/2-1;
-        Point midPoint = p[mid];
+        int mid = n/2-1;//hitung index tengah dari array
+        Point midPoint = p[mid];//variabel yang menyimpan titik dengan posisi index di tengah
         
-        Line left = closestR(p, q, start, mid);
-        Line right = closestR(p, q, mid, n-1);
+        Line left = closestR(p, q, start, mid);//panggil secara rekursif untuk garis di bagian kiri, dengan array dimulai dari start ke mid
+        Line right = closestR(p, q, mid, n-1);//panggil secara rekursif untuk garis di bagian kanan, dari mid ke n-1
         
-        Line temp = this.smaller(left,right);
+        Line temp = this.smaller(left,right);//variabel menyimpan garis yang lebih kecil dari garis bagian kiri dan bagian kanan
         
-        int count = 0;
-        for (int i = 0; i < q.length; i++) {
-            if(Math.abs(q[i].x) - Math.abs(midPoint.x)<temp.distance){
-                count++;
+        int count = 0;//variabel yang menghitung banyak titik yang berada di dekat garis pembagi kedua bagian kiri dan kanan
+        for (int i = 0; i < q.length; i++) {//untuk setiap titik di q
+            if(Math.abs(q[i].x) - Math.abs(midPoint.x)<temp.distance){//hitung untuk titik q ke i jika nilai kordinat x nya ketika dikurangi dengan kordinat x titik midPoint lebih kecil dari jarak garis terdekat atau tidak
+                count++;//jika iya variabel count bertambah
             }
         }
-        if(count==0){
-            return temp;
+        if(count==0){//jika variabel count nilai masih 0 maka sudah tidak ada garis dengan jarak yang lebih dekat
+            return temp;//kembalikan garis temp
         }
-        else{
-            Point[] strip = new Point[count];
-            int j = 0;
-            for (int i = 0; i < q.length; i++) {
-                if(Math.abs(q[i].x) - Math.abs(midPoint.x)<temp.distance){
-                    strip[j] = q[i];
-                    j++;
+        else{//jika variabel count nilai lebih dari 0
+            Point[] strip = new Point[count];//buat sebuah array titik berukuran count
+            int j = 0;//variabel ini menyimpan index untuk array strip
+            for (int i = 0; i < q.length; i++) {//untuk setiap titik pada array q
+                if(Math.abs(q[i].x) - Math.abs(midPoint.x)<temp.distance){//hitung untuk titik q ke i jika nilai kordinat x nya ketika dikurangi dengan kordinat x titik midPoint lebih kecil dari jarak garis terdekat atau tidak
+                    strip[j] = q[i];//maka untuk strip ke j berisi titik dari q ke i
+                    j++;//nilai j bertambah
                 }
             }
-            Line temp2 = this.smaller(temp, this.stripClosest(strip, temp.distance));
-            return temp2;
+            Line temp2 = this.smaller(temp, this.stripClosest(strip, temp.distance));//cek garis yang lebih pendek dari temp atau hasil garis dari metode stripClosest
+            return temp2;//kembalikan temp2
         }
     }
     
@@ -364,25 +373,30 @@ public class Calculation {
      * @return garis yang terbentuk dari dua pasangan titik terdekat
      */
     private Line closestPair(Point[] p){
-        Arrays.sort(p);
-        Point[] q = p;
-        return this.closestR(p, q, 0, p.length);
+        Arrays.sort(p);//urutkan array p berdasarkan kordinat x
+        Point[] q = p;//buat array q yang merupakan array p
+        return this.closestR(p, q, 0, p.length);//panggil metode rekursif sebagai output
     }
     
+    /**
+     * Metode ini mencari index dari kedua titik terdekat
+     * @param p kumpulan titik
+     * @return String yang berupa index dari kedua titik yang memiliki jarak terdekat
+     */
     public String idxClosestPair(Point[] p){
-        Point[] temp = p.clone();
-        Line cp = this.closestPair(p);
-        Point a=cp.p;
-        Point b=cp.q;
-        String aS="";
-        String bS="";
-        for (int q = 0; q < p.length; q++) {
-            if(temp[q].equivalent(a)){
-                aS+=q+1;
-            }else if(temp[q].equivalent(b)){
-                bS+=q+1;
+        Point[] temp = p.clone();//buat sebuah array yang merupakan clone dari array p
+        Line cp = this.closestPair(p);//panggil metode closestPair dengan masukan p
+        Point a=cp.p;//menyimpan titik dari garis cp
+        Point b=cp.q;//menyimpan titik dari garis cp
+        String aS="";//variabel string yang menyimpan index titik pertama
+        String bS="";//variabel string yang menyimpan index titik kedua
+        for (int q = 0; q < p.length; q++) {//untuk setiap titik pada temp
+            if(temp[q].equivalent(a)){//cek apabila titik temp ke q sama dengan titik a
+                aS+=q+1;//jika iya, simpan index pada String aS ditambah dengan 1 karena index hasil dari 1 sampai n
+            }else if(temp[q].equivalent(b)){//cek apabila titik temp ke q sama dengan titik b
+                bS+=q+1;//jika iya, simpan index pada String aS ditambah dengan 1 karena index hasil dari 1 sampai n
             }
         }
-        return aS+" "+bS;
+        return aS+" "+bS;//kembalikan kedua String
     }
 }
