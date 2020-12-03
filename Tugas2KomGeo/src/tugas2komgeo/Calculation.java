@@ -5,6 +5,7 @@
  */
 package tugas2komgeo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -83,7 +84,7 @@ public class Calculation {
      * @return bernilai false jika titik berada di luar polygon. Bernilai true
      * jika titik berada di dalam polygon.
      */
-    private boolean isIn(Point[]p,Point t){//Mengecek apakah titik berada dalam polygon atau tidak
+    private boolean isIn(Point[]p, Point t){//Mengecek apakah titik berada dalam polygon atau tidak
         boolean cek;//untuk mengecek apabila garis berpotongan atau tidak
         int counter=0;//untuk mengecek berapa kali berpotongan
         int n=p.length;//banyak titik yang ada
@@ -184,55 +185,104 @@ public class Calculation {
         return cross(pq, qr); //pq X qr
     }
     
-    private void incrementaSweeping(Point[] p){
+    private Point[] incrementaSweeping(Point[] p){
         Arrays.sort(p);
-        LinkedList<Point> l = new LinkedList<>();// untuk menampung convex hull saat ini
-        l.add(p[0]);
-        l.add(p[1]);
-        l.add(p[2]);
-        Point pl = p[1];
-        Point pr = p[2];
-        for (int i = 3; i < p.length; i++) {
-            if(i==3){
-                boolean li = (this.ccw(p[0], pl, p[i])<0);//false
-                boolean ri = (this.ccw(p[0], pr, p[i])<0);//true
-                if(li){
-                    System.out.println("li");
-                    Point temp1 = l.getLast();
-                    l.removeLast();
-                    Point temp2 = l.getLast();
-                    l.removeLast();
-                    l.add(temp2);
-                    l.add(p[i]);
-                    l.add(temp1);
-                }
-                else if(ri){
-                    System.out.println("ri");
-                    l.add(2, p[i]);
-                }
-                
-                break;
+        ArrayList<Point> l = new ArrayList<>();// untuk menampung convex hull saat ini
+        if(p.length>4){           
+            l.add(p[0]);
+            l.add(p[1]);
+            l.add(p[2]);
+            int bawah, atas, nbawah, natas;
+            if(p[0].y>p[1].y){
+                nbawah = 1;
+                natas = 0;
             }
-//            else{
-//                for (int j = 0; j < l.size(); j++) {
-//                    System.out.println(l.pop().print());
-//                }
-////                Point[] px = new Point[l.size()];
-////                for (int j = 0; j < l.size(); j++) {
-////                    px[j] = l.pop();
-////                }
-////                for (int j = 0; j < px.length; j++) {
-////                    System.out.println("length: "+px.length);
-////                    System.out.println("j: "+j);
-////                    System.out.println(px[j].print());
-////                }
-//                break;
-//            }
+            else{
+                nbawah = 0;
+                natas = 1;
+            }
+            int right = 2;
+            bawah = right;
+            atas = right;
+            for (int i = 3; i < p.length; i++) {
+                if(i==3){
+                    if(this.ccw(p[i], l.get(right), l.get(nbawah))<0){
+                        //belok kanan
+                        Point temp = l.get(natas);
+                        l.remove(natas);
+                        l.add(p[i]);
+                        l.add(temp);
+                    }
+                    else if(this.ccw(p[i], l.get(right), l.get(nbawah))>0){
+                        Point temp = l.get(right);
+                        l.remove(right);
+                        l.add(p[i]);
+                        l.add(temp);
+                    }
+                    bawah = nbawah;
+                    atas = natas;
+                }
+                else{
+                    while(this.ccw(p[i], l.get(bawah), l.get(nbawah))>0){
+                        bawah = nbawah;
+                        nbawah--;
+                    }
+                    while(this.ccw(p[i], l.get(atas), l.get(natas))<0){
+                        atas = natas;
+                        if(natas==l.size()-1){
+                            natas = 0;
+                        }
+                        else{
+                            natas++;
+                        }
+                    }
+                    //bawah, baru, atas
+                    for (int j = bawah+1; j < atas; j++) {
+                        l.remove(j);                        
+                    }
+                    this.addMiddle(l, p[i], bawah+1);
+                }
+            }
         }
+        Point[] arr = new Point[l.size()];
+        for (int i = 0; i < p.length; i++) {
+            arr[i] = l.get(i);            
+        }
+        return arr;
     }
     
-    public void longest(Point[] p){
-        this.incrementaSweeping(this.aklToussant(p));
+    public ArrayList<Point> addMiddle(ArrayList<Point> l, Point p, int index){
+        Point temp = l.get(index);
+        l.add(index, p);
+        for (int i = index+1; i < l.size(); i++) {
+            Point temp2 = l.get(i);
+            l.add(i, temp);
+            temp = temp2;
+        }
+        return l;
+    }
+    
+    private Line longest(Point[] p){
+        Point[] temp = this.incrementaSweeping(this.aklToussant(p));     
+        Line hasil = this.rotatingCaliper(temp);
+        return hasil;
+    }
+    
+    public String idxLongestPair(Point[] p){
+        Point[] temp = p.clone();//buat sebuah array yang merupakan clone dari array p
+        Line lp = this.longest(p);//panggil metode closestPair dengan masukan p
+        Point a=lp.p;//menyimpan titik dari garis cp
+        Point b=lp.q;//menyimpan titik dari garis cp
+        String aS="";//variabel string yang menyimpan index titik pertama
+        String bS="";//variabel string yang menyimpan index titik kedua
+        for (int q = 0; q < p.length; q++) {//untuk setiap titik pada temp
+            if(temp[q].equivalent(a)){//cek apabila titik temp ke q sama dengan titik a
+                aS+=q+1;//jika iya, simpan index pada String aS ditambah dengan 1 karena index hasil dari 1 sampai n
+            }else if(temp[q].equivalent(b)){//cek apabila titik temp ke q sama dengan titik b
+                bS+=q+1;//jika iya, simpan index pada String aS ditambah dengan 1 karena index hasil dari 1 sampai n
+            }
+        }
+        return aS+" "+bS;//kembalikan kedua String
     }
     
     /**
@@ -251,16 +301,39 @@ public class Calculation {
         return Math.abs(res / 2.0);
     }
     
-    public void rotatingCaliper(Point[] p){
-        int idxp = p.length-2;
-        int idxnextp = 0;
-        int idxq = 0;
-        int idxnextq = 1;
-        while(luasSegitiga(p[idxp],p[idxnextp],p[idxnextq])>luasSegitiga(p[idxp],p[idxnextp],p[idxp])){
-            idxq = idxnextq;
-            idxnextq++;
+    public Line rotatingCaliper(Point[] p){
+        int n = p.length;
+        if(n==1){
+            return null;
         }
-        
+        if(n == 2){
+            return new Line(p[0], p[1], this.dist(p[0],p[1]));
+        }
+        int k = 1;
+        while(this.luasSegitiga(p[n-1], p[0], p[(k+1)%n])>this.luasSegitiga(p[n-1], p[0], p[k])){
+            k++;
+        }
+        double res = 0;
+        for (int i = 0, j = k; i<=k && j < n; i++) {
+            double temp = this.dist(p[i], p[j]);
+            if(temp>res){
+                res = temp;
+                this.sOne=p[i];
+                this.sTwo=p[j];
+            }
+            while(j<n && this.luasSegitiga(p[i], p[(i+1)%n], p[(j+1)%n])>
+                    this.luasSegitiga(p[i], p[(i+1)%n], p[j])){
+                temp = this.dist(p[i], p[(j+1)%n]);
+                if(temp>res){
+                    res = temp;
+                    this.sOne=p[i];
+                    this.sTwo=p[(j+1)%n];
+                }
+                j++;
+            }
+        }
+        Line hasil = new Line(this.sOne, this.sTwo, res);
+        return hasil;
     }
     
     /**

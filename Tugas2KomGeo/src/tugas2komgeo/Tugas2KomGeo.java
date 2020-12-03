@@ -27,9 +27,8 @@ public class Tugas2KomGeo {
                 p[j]= new Point(sc.nextInt(),sc.nextInt());//buat titik baru untuk array
             }
             Calculation calc = new Calculation();
-//           System.out.println(calc.idxClosestPair(p));
-            calc.longest(p);
             System.out.println(calc.idxClosestPair(p));//mengeluarkan index kedua titik dengan jarak terdekat
+            System.out.println(calc.idxLongestPair(p));
         }
     }
     
