@@ -186,9 +186,64 @@ public class Calculation {
         }
         else{
             System.out.println("else");
+            l.add(p[0]);            
+            int bawah, atas, nbawah, natas;
+            boolean isSAtas = false;
+            //segitiga bawah
+            if(p[0].y>p[1].y){
+                nbawah = 1;
+                natas = 0;
+            }
+            else{//segitiga atas
+                nbawah = 0;
+                natas = 1;
+                isSAtas = true;
+            }
+            int right = 2;
+            bawah = right;
+            atas = right;
+            for (int i = 3; i < p.length; i++) {
+                //cek bawah
+                while(this.ccw(p[i], l.get(bawah), l.get(nbawah))<0){ //selama masih belok kiri
+                    bawah = nbawah;
+                    if(nbawah!=0){
+                        nbawah--;
+                    }
+                }
+                //hasil: p[i]-->bawah-->nbawah
+                //cek atas
+                while(this.ccw(p[i], l.get(atas), l.get(natas))>0){ //selama masih belok kanan
+                    atas = natas;
+                    if(i==3){
+                        natas--;
+                    }
+                    else{
+                        natas++;
+                    }
+                }
+                if(i>3){
+                    //buang titik di dalam polygon baru
+                    for (int j = bawah+1; j < atas; j++) {
+                        l.remove(j);
+                    }
+                }
+                else{
+                    //bikin segitiga jadi ccw di ArrayList
+                    if(!isSAtas){
+                        l.add(p[2]);
+                        l.add(p[1]);
+                    }
+                    else{
+                        l.add(p[1]);
+                        l.add(p[2]);
+                    }
+                }
+                this.addMiddle(l, p[i], bawah+1);
+            }
             return p;
         }
-//        if(p.length>=4){          
+//        else{
+//            System.out.println("else");
 //            l.add(p[0]);
 //            l.add(p[1]);
 //            l.add(p[2]);
@@ -224,16 +279,26 @@ public class Calculation {
 //                }
 //                else{
 //                    while(this.ccw(p[i], l.get(bawah), l.get(nbawah))>0){
-//                        bawah = nbawah;
-//                        nbawah--;
-//                    }
-//                    while(this.ccw(p[i], l.get(atas), l.get(natas))<0){
-//                        atas = natas;
-//                        if(natas==l.size()-1){
-//                            natas = 0;
+//                        if(nbawah!=0){
+//                            bawah = nbawah;
+//                            nbawah--;
 //                        }
 //                        else{
-//                            natas++;
+//                            break;
+//                        }
+//                    }
+//                    while(this.ccw(p[i], l.get(atas), l.get(natas))<0){
+//                        if(natas!=0){
+//                            atas = natas;
+//                            if(natas==l.size()-1){
+//                                natas = 0;
+//                            }
+//                            else{
+//                                natas++;
+//                            }
+//                        }
+//                        else{
+//                            break;
 //                        }
 //                    }
 //                    //bawah, baru, atas
@@ -242,13 +307,13 @@ public class Calculation {
 //                    }
 //                    this.addMiddle(l, p[i], bawah+1);
 //                }
+//            }            
+//            Point[] arr = new Point[l.size()];
+//            for (int i = 0; i < p.length; i++) {
+//                arr[i] = l.get(i);            
 //            }
+//            return arr;
 //        }
-//        Point[] arr = new Point[l.size()];
-//        for (int i = 0; i < p.length; i++) {
-//            arr[i] = l.get(i);            
-//        }
-//        return arr;
     }
     
     public ArrayList<Point> addMiddle(ArrayList<Point> l, Point p, int index){
