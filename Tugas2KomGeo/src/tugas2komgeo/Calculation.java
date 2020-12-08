@@ -116,31 +116,20 @@ public class Calculation {
      * @param p merupakan array dari kelas Point(titik)
      * @return  
      */
-    public Point[] aklToussant(Point [] p){
+    private Point[] aklToussant(Point [] p){
         LinkedList<Point> temp = new LinkedList<>();
         // 0=xmax 1=xmin 2=ymax 3=ymin
         Point [] shell = new Point[4];
-        double xMax=Double.MIN_VALUE;
         double yMax=Double.MIN_VALUE;
         double yMin=Double.MAX_VALUE;
-        double xMin=Double.MAX_VALUE;
         
 //        int iXMax =-1;
 //        int iYMax=-1;
 //        int iYMin=-1;
 //        int iXMin=-1;
-        
-        for (int i = 0; i < p.length; i++) {
-            if(p[i].x>xMax){
-                xMax=p[i].x;
-//                iXMax=i;
-                shell[0]=p[i];
-            }
-            if(p[i].x<xMin){
-                xMin=p[i].x;
-//                iXMin=i;
-                shell[1]=p[i];
-            }
+        shell[0]=p[0];
+        shell[1]=p[p.length-1];
+        for (int i = 1; i < p.length-1; i++) {
             if(p[i].y>yMax){
                 yMax=p[i].y;
 //                iYMax=i;
@@ -153,15 +142,19 @@ public class Calculation {
             }
         }
         
-        for (int i = 0; i < p.length; i++) {
-            if(!this.isIn(shell, p[i])){
-                temp.add(p[i]);
-            }
-        }
-        
         for (int i = 0; i < 4; i++) {
             temp.add(shell[i]);
         }
+        
+        
+        for (int i = 0; i < p.length; i++) {
+            if(!temp.contains(p[i])){
+                if(this.isIn(shell, p[i])){
+                    temp.add(p[i]);
+                }
+            }
+        }
+        
         Point[] output = new Point[temp.size()];
         for (int i = 0; i < output.length; i++) {
             output[i] = temp.pop();
@@ -308,7 +301,7 @@ public class Calculation {
         return Math.abs(res / 2.0);
     }
     
-    public Line rotatingCaliper(Point[] p){
+    private Line rotatingCaliper(Point[] p){
         int n = p.length;
         if(n==1){
             return null;
