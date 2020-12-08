@@ -188,67 +188,74 @@ public class Calculation {
     public Point[] incrementaSweeping(Point[] p){
         Arrays.sort(p);
         ArrayList<Point> l = new ArrayList<>();// untuk menampung convex hull saat ini
-        if(p.length>4){           
-            l.add(p[0]);
-            l.add(p[1]);
-            l.add(p[2]);
-            int bawah, atas, nbawah, natas;
-            if(p[0].y>p[1].y){
-                nbawah = 1;
-                natas = 0;
-            }
-            else{
-                nbawah = 0;
-                natas = 1;
-            }
-            int right = 2;
-            bawah = right;
-            atas = right;
-            for (int i = 3; i < p.length; i++) {
-                if(i==3){
-                    if(this.ccw(p[i], l.get(right), l.get(nbawah))<0){
-                        //belok kanan
-                        Point temp = l.get(natas);
-                        l.remove(natas);
-                        l.add(p[i]);
-                        l.add(temp);
-                    }
-                    else if(this.ccw(p[i], l.get(right), l.get(nbawah))>0){
-                        Point temp = l.get(right);
-                        l.remove(right);
-                        l.add(p[i]);
-                        l.add(temp);
-                    }
-                    bawah = nbawah;
-                    atas = natas;
-                }
-                else{
-                    while(this.ccw(p[i], l.get(bawah), l.get(nbawah))>0){
-                        bawah = nbawah;
-                        nbawah--;
-                    }
-                    while(this.ccw(p[i], l.get(atas), l.get(natas))<0){
-                        atas = natas;
-                        if(natas==l.size()-1){
-                            natas = 0;
-                        }
-                        else{
-                            natas++;
-                        }
-                    }
-                    //bawah, baru, atas
-                    for (int j = bawah+1; j < atas; j++) {
-                        l.remove(j);                        
-                    }
-                    this.addMiddle(l, p[i], bawah+1);
-                }
-            }
+        if(p.length<=4){
+            return p;
         }
-        Point[] arr = new Point[l.size()];
-        for (int i = 0; i < p.length; i++) {
-            arr[i] = l.get(i);            
+        else{
+            System.out.println("else");
+            return p;
         }
-        return arr;
+//        if(p.length>=4){          
+//            l.add(p[0]);
+//            l.add(p[1]);
+//            l.add(p[2]);
+//            int bawah, atas, nbawah, natas;
+//            if(p[0].y>p[1].y){
+//                nbawah = 1;
+//                natas = 0;
+//            }
+//            else{
+//                nbawah = 0;
+//                natas = 1;
+//            }
+//            int right = 2;
+//            bawah = right;
+//            atas = right;
+//            for (int i = 3; i < p.length; i++) {
+//                if(i==3){
+//                    if(this.ccw(p[i], l.get(right), l.get(nbawah))<0){
+//                        //belok kanan
+//                        Point temp = l.get(natas);
+//                        l.remove(natas);
+//                        l.add(p[i]);
+//                        l.add(temp);
+//                    }
+//                    else if(this.ccw(p[i], l.get(right), l.get(nbawah))>0){
+//                        Point temp = l.get(right);
+//                        l.remove(right);
+//                        l.add(p[i]);
+//                        l.add(temp);
+//                    }
+//                    bawah = nbawah;
+//                    atas = natas;
+//                }
+//                else{
+//                    while(this.ccw(p[i], l.get(bawah), l.get(nbawah))>0){
+//                        bawah = nbawah;
+//                        nbawah--;
+//                    }
+//                    while(this.ccw(p[i], l.get(atas), l.get(natas))<0){
+//                        atas = natas;
+//                        if(natas==l.size()-1){
+//                            natas = 0;
+//                        }
+//                        else{
+//                            natas++;
+//                        }
+//                    }
+//                    //bawah, baru, atas
+//                    for (int j = bawah+1; j < atas; j++) {
+//                        l.remove(j);                        
+//                    }
+//                    this.addMiddle(l, p[i], bawah+1);
+//                }
+//            }
+//        }
+//        Point[] arr = new Point[l.size()];
+//        for (int i = 0; i < p.length; i++) {
+//            arr[i] = l.get(i);            
+//        }
+//        return arr;
     }
     
     public ArrayList<Point> addMiddle(ArrayList<Point> l, Point p, int index){
