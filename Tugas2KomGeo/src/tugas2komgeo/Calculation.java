@@ -154,13 +154,13 @@ public class Calculation {
         }
         
         for (int i = 0; i < p.length; i++) {
-            if(p[i].equals(shell[0])||p[i].equals(shell[1])||p[i].equals(shell[2])||p[i].equals(shell[3])){
+            if(!this.isIn(shell, p[i])){
                 temp.add(p[i]);
-            }else{
-                if(!this.isIn(shell, p[i])){
-                    temp.add(p[i]);
-                }
             }
+        }
+        
+        for (int i = 0; i < 4; i++) {
+            temp.add(shell[i]);
         }
         Point[] output = new Point[temp.size()];
         for (int i = 0; i < output.length; i++) {
