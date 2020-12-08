@@ -28,7 +28,19 @@ public class Tugas2KomGeo {
             }
             Calculation calc = new Calculation();
             System.out.println(calc.idxClosestPair(p));//mengeluarkan index kedua titik dengan jarak terdekat
-            System.out.println(calc.idxLongestPair(p));
+            System.out.println("akl toussant");
+            Point[]temp = calc.aklToussant(p);
+            for (int j = 0; j < n; j++) {
+                System.out.println(temp[j].x+" "+temp[j].y);
+            }
+            System.out.println("Rotating Cali");
+            Line test = calc.rotatingCaliper(temp);
+            System.out.println(test.p.x+" "+test.p.y+" "+test.q.x+" "+test.q.y);
+            System.out.println("Incremental");
+            Point[]sts=calc.incrementaSweeping(p);
+            for (int j = 0; j < n; j++) {
+                System.out.println(sts[j].x+" "+sts[j].y);
+            }
         }
     }
     

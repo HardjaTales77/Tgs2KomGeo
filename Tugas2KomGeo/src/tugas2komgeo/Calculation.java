@@ -116,7 +116,7 @@ public class Calculation {
      * @param p merupakan array dari kelas Point(titik)
      * @return  
      */
-    private Point[] aklToussant(Point [] p){
+    public Point[] aklToussant(Point [] p){
         LinkedList<Point> temp = new LinkedList<>();
         // 0=xmax 1=xmin 2=ymax 3=ymin
         Point [] shell = new Point[4];
@@ -185,7 +185,7 @@ public class Calculation {
         return cross(pq, qr); //pq X qr
     }
     
-    private Point[] incrementaSweeping(Point[] p){
+    public Point[] incrementaSweeping(Point[] p){
         Arrays.sort(p);
         ArrayList<Point> l = new ArrayList<>();// untuk menampung convex hull saat ini
         if(p.length>4){           
