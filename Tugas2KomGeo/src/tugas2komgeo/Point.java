@@ -28,10 +28,18 @@ public class Point implements Comparable<Point>{
     }
     
     @Override
+    /**
+     * Membandingkan dua titik berdasarkan koordinat x nya
+     * Keluaran mengkiuti syarat compareTo milik java
+     */
     public int compareTo(Point o) {
         return (int)(this.x-o.x);
     }
     
+    /**
+     * Mengeluarkan koordinat x dan y titik dalam bentuk string
+     * @return x dan y dalam bentuk string
+     */
     public String print(){
         return "["+x+","+y+"] ";
     }
