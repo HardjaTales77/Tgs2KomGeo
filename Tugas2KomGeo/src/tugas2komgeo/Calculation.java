@@ -117,6 +117,7 @@ public class Calculation {
      * @return  
      */
     private Point[] aklToussant(Point [] p){
+        Arrays.sort(p);//sort array p berdasarkan kordinat x
         LinkedList<Point> temp = new LinkedList<>();//Linkedlist untuk menyimpan hasil sementara
         Point [] shell = new Point[4];//array titik yang berisi titik yang membentuk segiempat : titik dengan nilai kordinat x terbesar dan terkecil serta titik dengan nilai kordinat y terbesar dan terkecil
         double yMax=Double.MIN_VALUE;//variabel menyimpan nilai kordinat y terbesar
@@ -170,7 +171,6 @@ public class Calculation {
     }
     
     public Point[] incrementaSweeping(Point[] p){
-        Arrays.sort(p);
         ArrayList<Point> l = new ArrayList<>();// untuk menampung convex hull saat ini
         if(p.length<=4){
             return p;
