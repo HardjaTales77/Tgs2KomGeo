@@ -117,49 +117,40 @@ public class Calculation {
      * @return  
      */
     private Point[] aklToussant(Point [] p){
-        LinkedList<Point> temp = new LinkedList<>();
-        // 0=xmax 1=xmin 2=ymax 3=ymin
-        Point [] shell = new Point[4];
-        double yMax=Double.MIN_VALUE;
-        double yMin=Double.MAX_VALUE;
-        
-//        int iXMax =-1;
-//        int iYMax=-1;
-//        int iYMin=-1;
-//        int iXMin=-1;
-        shell[0]=p[0];
-        shell[1]=p[p.length-1];
-        for (int i = 1; i < p.length-1; i++) {
-            if(p[i].y>yMax){
-                yMax=p[i].y;
-//                iYMax=i;
-                shell[2]=p[i];
+        LinkedList<Point> temp = new LinkedList<>();//Linkedlist untuk menyimpan hasil sementara
+        Point [] shell = new Point[4];//array titik yang berisi titik yang membentuk segiempat : titik dengan nilai kordinat x terbesar dan terkecil serta titik dengan nilai kordinat y terbesar dan terkecil
+        double yMax=Double.MIN_VALUE;//variabel menyimpan nilai kordinat y terbesar
+        double yMin=Double.MAX_VALUE;//variabel menyimpan nilai kordinat y terkecil
+        shell[0]=p[0];//array sudah di sort berdasarkan nilai kordinat x maka pada posisi array ke 0 adalah titik dengan nilai kordinat x terkecil
+        shell[1]=p[p.length-1];//array sudah di sort berdasarkan nilai kordinat x maka pada posisi array ke p.length-1 adalah titik dengan nilai kordinat x terbesar
+        for (int i = 1; i < p.length-1; i++) {//untuk semua titik pada array dari posisi ke 1 ke posisi ke titik sebelum p.length-1
+            if(p[i].y>yMax){//cek apakah nilai kordinat y titik ke i lebih besar dari yMax
+                yMax=p[i].y;//jika iya ganti nilai yMax dengan nilai kordinat y titik ke i
+                shell[2]=p[i];//masukkan ke array titik shell titik ke i
             }
-            if(p[i].y<yMin){
-                yMin=p[i].y;
-//                iYMin=i;
-                shell[3]=p[i];
+            if(p[i].y<yMin){//cek apakah nilai kordinat y titik ke i lebih kecil dari yMax
+                yMin=p[i].y;//jika iya ganti nilai yMax dengan nilai kordinat y titik ke i
+                shell[3]=p[i];//masukkan ke array titik shell titik ke i
             }
         }
         
-        for (int i = 0; i < 4; i++) {
-            temp.add(shell[i]);
+        for (int i = 0; i < 4; i++) {//untuk semua titik pada shell
+            temp.add(shell[i]);//tambahkan dalam linkedList temp
         }
         
-        
-        for (int i = 0; i < p.length; i++) {
-            if(!temp.contains(p[i])){
-                if(this.isIn(shell, p[i])){
-                    temp.add(p[i]);
+        for (int i = 0; i < p.length; i++) {//untuk semua titik pada p
+            if(!temp.contains(p[i])){//cek apakah titik sudah ada dalam linkedlist temp
+                if(!this.isIn(shell, p[i])){//jika titik tidak ada dalam linkedlist cek jika titik berada di dalam polygon yang terbentuk dari array shell
+                    temp.add(p[i]);//jika tidak maka tambahkan ke linkedlist temp
                 }
             }
         }
         
-        Point[] output = new Point[temp.size()];
-        for (int i = 0; i < output.length; i++) {
-            output[i] = temp.pop();
+        Point[] output = new Point[temp.size()];//array titik hasil berukuran besar dari linkedlist temp
+        for (int i = 0; i < output.length; i++) {//untuk semua titik yang bisa dimasukkan dalam array output
+            output[i] = temp.pop();//masukkan ke dalam array output titik dari linkedlist temp
         }
-        return output;
+        return output;//kembalikan array output
     }
     
     /**
@@ -316,28 +307,47 @@ public class Calculation {
 //        }
     }
     
+    /**
+     * Metode ini memasukkan sebuah titik ke dalam arraylist (di sela-sela titik lain)
+     *
+     * @param l arraylist dari titik dimana titik baru mau dimasukkan
+     * @param p titik baru yang mau dimasukkan
+     * @param index adalah posisi index letak mau dimasukkan titik
+     * @return hasil arraylist
+     */
     public ArrayList<Point> addMiddle(ArrayList<Point> l, Point p, int index){
-        Point temp = l.get(index);
-        l.add(index, p);
-        for (int i = index+1; i < l.size(); i++) {
-            Point temp2 = l.get(i);
-            l.add(i, temp);
-            temp = temp2;
+        Point temp = l.get(index);//variabel titik yang menyimpan secara sementara titik awal yang berada di posisi index
+        l.add(index, p);//masukkan ke dalam arraylist titik p pada posisi index
+        for (int i = index+1; i < l.size(); i++) {//untuk setiap titik dari index+1 ke besar ukuran arraylist
+            Point temp2 = l.get(i);//variabel sementara kedua yang menyimpan titik sementara di posisi ke i
+            l.add(i, temp);//masukkan titik temp ke posisi i pada arraylist
+            temp = temp2;//update temp dengan titik dari temp2
         }
-        return l;
+        return l;//kembalikan hasil arraylist yang sudah ditambah titik
     }
     
+    /**
+     * Metode ini memanggil metode lain untuk mencari pasangan titik dengan jarak terjauh
+     *
+     * @param p array sebuah titik
+     * @return variabel Line hasil
+     */
     private Line longest(Point[] p){
-        Point[] temp = this.incrementaSweeping(this.aklToussant(p));     
-        Line hasil = this.rotatingCaliper(temp);
+        Point[] temp = this.incrementaSweeping(this.aklToussant(p));//variabel array titik ini menyimpan hasil convex hull dari proses metode incrementalSweeping dan akl-toussaint     
+        Line hasil = this.rotatingCaliper(temp);//variabel line yang menyimpan hasil perhitungan rotating caliper
         return hasil;
     }
     
+    /**
+     * Metode ini mencari index dari kedua titik terjauh
+     * @param p kumpulan titik
+     * @return String yang berupa index dari kedua titik yang memiliki jarak terjauh
+     */
     public String idxLongestPair(Point[] p){
         Point[] temp = p.clone();//buat sebuah array yang merupakan clone dari array p
-        Line lp = this.longest(p);//panggil metode closestPair dengan masukan p
-        Point a=lp.p;//menyimpan titik dari garis cp
-        Point b=lp.q;//menyimpan titik dari garis cp
+        Line lp = this.longest(p);//panggil metode longest dengan masukan p
+        Point a=lp.p;//menyimpan titik dari garis lp
+        Point b=lp.q;//menyimpan titik dari garis lp
         String aS="";//variabel string yang menyimpan index titik pertama
         String bS="";//variabel string yang menyimpan index titik kedua
         for (int q = 0; q < p.length; q++) {//untuk setiap titik pada temp
@@ -366,39 +376,45 @@ public class Calculation {
         return Math.abs(res / 2.0);
     }
     
+    /**
+     * Metode ini menggunakan algoritma Rotating Calipers untuk mencari 2 titik dengan jarak terjauh
+     *
+     * @param p kumpulan titik
+     * @return variabel Line yang terbuat dari 2 titik dengan jarak terjauh
+     */
     private Line rotatingCaliper(Point[] p){
-        int n = p.length;
-        if(n==1){
-            return null;
+        int n = p.length;//variabel ini menyimpan banyaknya titik p
+        if(n==1){//jika banyak titik hanya 1
+            return null;//kembalikan null
         }
-        if(n == 2){
-            return new Line(p[0], p[1], this.dist(p[0],p[1]));
+        if(n == 2){//jika banyak titik hanya 2
+            return new Line(p[0], p[1], this.dist(p[0],p[1]));//kembalikan garis yang terbentuk dari kedua titik tersebut
         }
-        int k = 1;
-        while(this.luasSegitiga(p[n-1], p[0], p[(k+1)%n])>this.luasSegitiga(p[n-1], p[0], p[k])){
-            k++;
+        int k = 1;//variabel berfungsi sebagai counter/index
+        while(this.luasSegitiga(p[n-1], p[0], p[(k+1)%n])>this.luasSegitiga(p[n-1], p[0], p[k])){//selama luas segitiga dari titik p[n-1],p[n],p[(k+1)%n] lebih besar dari luas segitiga p[n-1], p[0], p[k]
+            k++;//variabel k bertambah
         }
-        double res = 0;
-        for (int i = 0, j = k; i<=k && j < n; i++) {
-            double temp = this.dist(p[i], p[j]);
-            if(temp>res){
-                res = temp;
-                this.sOne=p[i];
-                this.sTwo=p[j];
+        double res = 0;//variabel ini menyimpan hasil dengan jarak terjauh
+        for (int i = 0, j = k; i<=k && j < n; i++) {//untuk semua titik i lebih kecil dari k dan untuk semua titik dari k lebih kecil dari n
+            double temp = this.dist(p[i], p[j]);//varibel sementara menyimpan jarak dari titik ke i dan j
+            if(temp>res){//cek jika nilai temp lebih besar dari res
+                res = temp;//jika iya maka ganti nilai res menjadi temp
+                this.sOne=p[i];//simpan titik ke i pada global variabel sOne
+                this.sTwo=p[j];//simpan titik ke j pada global variabel sTwo
             }
             while(j<n && this.luasSegitiga(p[i], p[(i+1)%n], p[(j+1)%n])>
-                    this.luasSegitiga(p[i], p[(i+1)%n], p[j])){
-                temp = this.dist(p[i], p[(j+1)%n]);
-                if(temp>res){
-                    res = temp;
-                    this.sOne=p[i];
-                    this.sTwo=p[(j+1)%n];
+                    this.luasSegitiga(p[i], p[(i+1)%n], p[j])){//selama nilai j lebih kecil n dan luas segitiga titik p[i], p[(i+1)%n], p[(j+1)%n] lebih besar dari luas segitiga titik p[i], p[(i+1)%n], p[j]
+                temp = this.dist(p[i], p[(j+1)%n]);//isi temp dengan jarak dari titik p[i], p[(j+1)%n]
+                if(temp>res){//cek apakah nilai temp lebih besar dari res
+                    res = temp;//jika iya ganti nilai res menjadi temp
+                    this.sOne=p[i];//simpan titik ke i pada global variabel sOne
+                    this.sTwo=p[(j+1)%n];//simpan titik ke (j+1)%n pada global variabel sOne
                 }
-                j++;
+                j++;//nilai j bertambah
             }
         }
-        Line hasil = new Line(this.sOne, this.sTwo, res);
-        return hasil;
+        Line hasil = new Line(this.sOne, this.sTwo, res);//variabel hasil menyimpan garis yang terbentuk dari variabel global sOne, sTwo dan res
+        return hasil;//kembalikan hasil
     }
     
     /**
